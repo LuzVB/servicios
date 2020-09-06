@@ -14,28 +14,28 @@ import java.util.List;
  *
  * @author Valentina
  */
-public class profesorService extends Datos implements Serializable  {
+public class ProfesorService extends Datos implements Serializable  {
     
     private List<Profesor> listaProfesores;
 
-    public profesorService() {
+    public ProfesorService() {
     }
     
     public void listarProfesor() throws SQLException {
         
         listaProfesores = new ArrayList<>();
-        listaProfesores.clear();
         java.sql.Statement st = conexion.createStatement();
         try {
-            String sql = "SELECT id_profesor, cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo FROM public.profesor";
+            String sql = "SELECT id_profesor, cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo\n" +"FROM public.profesor;";
             ResultSet result = st.executeQuery(sql);
             while (result.next()) {
                 int id = Integer.parseInt(result.getString("id_profesor"));
                 int edad = Integer.parseInt(result.getString("edad_correo"));
                 int cedula = Integer.parseInt(result.getString("cedula_profesor"));
-                listaProfesores.add(new Profesor(id,edad ,cedula , result.getString("nombre_profesor"), result.getString("apellid_profesor"), result.getString("correo_profesor")));
-                System.out.print(listaProfesores);    
+                listaProfesores.add(new Profesor(id,edad ,cedula , result.getString("nombre_profesor"), result.getString("apellid_profesor"), result.getString("correo_profesor")));    
+                System.out.println(this.getListaProfesores());
             }
+           
         } catch (Exception e) {
 
         }

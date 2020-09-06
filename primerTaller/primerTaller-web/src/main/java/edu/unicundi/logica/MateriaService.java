@@ -3,17 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unicundi.controller;
-
-import javax.ejb.Stateless;
-import javax.ws.rs.Path;
+package edu.unicundi.logica;
 
 /**
  *
  * @author Luz
  */
-@Stateless
-@Path("/materias")
-public class materiaController {
+public class MateriaService {
     
 }

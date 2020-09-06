@@ -6,7 +6,8 @@
 package edu.unicundi.controller;
 
 import edu.unicundi.controller.pojo.Profesor;
-import edu.unicundi.logica.profesorService;
+import edu.unicundi.controller.pojo.ConexionBD;
+import edu.unicundi.logica.ProfesorService;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -31,7 +32,7 @@ import javax.ws.rs.core.Response;
  */
 @Stateless
 @Path("/profesores")
-public class profesorController {
+public class ProfesorController {
         
     @Path("/retornarString")
     @GET
@@ -41,12 +42,16 @@ public class profesorController {
         return Response.status(Response.Status.OK).entity(nombre).build();
     }
     
-//    @Path("/retornarProfesor")
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public  Response retornarProfesor() {
-//            EstudianteService service = new EstudianteService();
-//            Estudiante estudiante = service.retornarEstudiantePorCedula(cedula);
-//            return Response.status(Response.Status.OK).entity(estudiante).build();
-//    }   
+    @Path("/retornarProfesor")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public  Response retornarProfesor() throws SQLException {
+        ProfesorService estudiante = new ProfesorService();
+        ConexionBD conexion = new ConexionBD();
+        conexion.conectarBaseDatos();
+        estudiante.listarProfesor();
+        return Response.status(Response.Status.OK).entity(estudiante.getListaProfesores()).build();
+    }  
+    
+    
 }
