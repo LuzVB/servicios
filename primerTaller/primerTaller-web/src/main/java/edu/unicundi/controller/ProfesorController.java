@@ -59,5 +59,20 @@ public class ProfesorController {
             return Response.status(Response.Status.BAD_REQUEST).entity("Cédula invalida").build();
         }
     } 
-      
+    
+    @Path("/insertarProfesor")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response insertarEstudiante(@Valid Profesor profesor){
+        try {
+            ProfesorService service = new ProfesorService();
+            ConexionBD conexion = new ConexionBD();
+            conexion.conectarBaseDatos();
+            service.insertarProfesor(profesor);
+            return Response.status(Response.Status.OK).entity("Se inserto correctamente").build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error al insertar").build();
+        }
+    }
 }

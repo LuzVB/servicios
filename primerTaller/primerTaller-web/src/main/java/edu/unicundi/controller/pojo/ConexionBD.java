@@ -32,7 +32,7 @@ public class ConexionBD {
     public void conectarBaseDatos() throws SQLException {
         String usuario = "postgres";
         String contrasena ="admin";
-        String nombreDB = "profesor";
+        String nombreDB = "profesor2";
         String cadenaConexion = "jdbc:postgresql://localhost:5432/"+nombreDB;
 
         try {

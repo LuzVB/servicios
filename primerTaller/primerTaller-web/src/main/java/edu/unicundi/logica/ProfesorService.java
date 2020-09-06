@@ -79,6 +79,14 @@ public class ProfesorService extends Datos implements Serializable  {
         }            
                 
     }
+    
+    public void insertarProfesor(Profesor profesorInsertar)  {
+        System.out.print("AQUI");
+        for(Materia materia: profesorInsertar.getListaMateria()) {
+            System.out.print(materia.getNombre());    
+        }
+    }
+    
     public List<Profesor> getListaProfesores() {
         return listaProfesores;
     }
