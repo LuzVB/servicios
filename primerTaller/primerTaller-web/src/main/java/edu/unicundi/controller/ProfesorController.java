@@ -45,5 +45,19 @@ public class ProfesorController {
         return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
     }  
     
-    
+    @Path("/retornarProfesorCedula/{cedula}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retornarEstudiantePorCedula(@PathParam("cedula") int cedula) {
+        try {
+            ProfesorService profesor = new ProfesorService();
+            ConexionBD conexion = new ConexionBD();
+            conexion.conectarBaseDatos();
+            profesor.listarProfesorCedula(cedula);
+            return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Cédula invalida").build();
+        }
+    } 
+      
 }
