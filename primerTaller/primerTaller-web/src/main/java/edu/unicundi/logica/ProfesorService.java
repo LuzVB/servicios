@@ -6,11 +6,14 @@
 package edu.unicundi.logica;
 import edu.unicundi.controller.pojo.Materia;
 import edu.unicundi.controller.pojo.Profesor;
+import edu.unicundi.logica.Datos;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.application.FacesMessage;
+import javax.inject.Inject;
 /**
  *
  * @author Valentina
@@ -20,6 +23,7 @@ public class ProfesorService extends Datos implements Serializable  {
     private List<Profesor> listaProfesores;
     private List<Materia> listaMaterias;
     private int idProfesor;
+
     public ProfesorService() {
     }
     
@@ -78,6 +82,19 @@ public class ProfesorService extends Datos implements Serializable  {
 
         }            
                 
+    }
+    public void editatrProfesor(Profesor profesor) throws SQLException{
+        
+        this.idProfesor = Integer.parseInt(profesor.getId().toString());
+        int edad = Integer.parseInt(profesor.getEdad().toString());
+        int cedula = Integer.parseInt(profesor.getCedula().toString());
+        System.out.println(profesor.getNombre() + " " + profesor.getApellido() + " " + profesor.getEdad());
+        String cadenaSql = "UPDATE public.profesor SET  id_profesor='" + this.idProfesor + "',cedula_profesor='" + cedula + "',nombre_profesor='" + profesor.getNombre()+ "',apellido_profesor='" + profesor.getApellido() + "',correo_profesor='" + profesor.getCorreo() + "',edad_correo='" + edad + "' WHERE id_profesor=" + this.idProfesor + ";";
+        FacesMessage message = new FacesMessage("Editó el profesor: " + profesor.getNombre());
+        Datos conexion = new Datos();
+        conexion.modifacionBaseDatos(cadenaSql, message);
+ 
+                               
     }
     public List<Profesor> getListaProfesores() {
         return listaProfesores;

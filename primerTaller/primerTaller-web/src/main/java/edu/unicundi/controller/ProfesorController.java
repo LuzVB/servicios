@@ -59,5 +59,17 @@ public class ProfesorController {
             return Response.status(Response.Status.BAD_REQUEST).entity("Cédula invalida").build();
         }
     } 
+    
+    @Path("/editarProfesor")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response editar(Profesor profesor) throws SQLException {
+            ProfesorService profesorService = new ProfesorService();
+            ConexionBD conexion = new ConexionBD();
+            conexion.conectarBaseDatos();
+            profesorService.editatrProfesor(profesor);
+            return Response.status(Response.Status.OK).entity("Modificacion Correcta").build();
+    }
       
 }
