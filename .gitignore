@@ -24,3 +24,4 @@ hs_err_pid*
 /primerTaller/primerTaller-ejb/target/
 /primerTaller/primerTaller-web/target/
 /primerTaller/primerTaller-ear/target/
+\primerTaller\servicios\primerTaller\primerTaller-web\src\main\java\edu\unicundi\controller\pojo\ConexionBD.java

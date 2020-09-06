@@ -25,15 +25,16 @@ public class ProfesorService extends Datos implements Serializable  {
         
         listaProfesores = new ArrayList<>();
         java.sql.Statement st = conexion.createStatement();
+         System.out.println("AQUIII");
         try {
             String sql = "SELECT id_profesor, cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo\n" +"FROM public.profesor;";
             ResultSet result = st.executeQuery(sql);
             while (result.next()) {
+                System.out.println(result);
                 int id = Integer.parseInt(result.getString("id_profesor"));
                 int edad = Integer.parseInt(result.getString("edad_correo"));
                 int cedula = Integer.parseInt(result.getString("cedula_profesor"));
-                listaProfesores.add(new Profesor(id,edad ,cedula , result.getString("nombre_profesor"), result.getString("apellid_profesor"), result.getString("correo_profesor")));    
-                System.out.println(this.getListaProfesores());
+                listaProfesores.add(new Profesor(id,edad ,cedula , result.getString("nombre_profesor"), result.getString("apellido_profesor"), result.getString("correo_profesor")));    
             }
            
         } catch (Exception e) {

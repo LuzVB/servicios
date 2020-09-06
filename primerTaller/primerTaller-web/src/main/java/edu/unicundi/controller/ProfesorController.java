@@ -34,23 +34,15 @@ import javax.ws.rs.core.Response;
 @Path("/profesores")
 public class ProfesorController {
         
-    @Path("/retornarString")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response retornarString() {
-        String nombre = "Johans González";
-        return Response.status(Response.Status.OK).entity(nombre).build();
-    }
-    
     @Path("/retornarProfesor")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public  Response retornarProfesor() throws SQLException {
-        ProfesorService estudiante = new ProfesorService();
+        ProfesorService profesor = new ProfesorService();
         ConexionBD conexion = new ConexionBD();
         conexion.conectarBaseDatos();
-        estudiante.listarProfesor();
-        return Response.status(Response.Status.OK).entity(estudiante.getListaProfesores()).build();
+        profesor.listarProfesor();
+        return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
     }  
     
     
