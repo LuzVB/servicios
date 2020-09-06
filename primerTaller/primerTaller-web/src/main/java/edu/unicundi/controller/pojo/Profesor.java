@@ -6,6 +6,7 @@
 package edu.unicundi.controller.pojo;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -24,17 +25,21 @@ public class Profesor implements Serializable{
     private String apellido;
     
     private String correo;
+    
+    private List<Materia> listaMateria;
 
     public Profesor() {
     }
     
-    public Profesor(Integer id, Integer edad, Integer cedula, String nombre, String apellido, String correo) {
+    public Profesor(Integer id, Integer edad, Integer cedula, String nombre, String apellido, String correo, List<Materia> listaMateria )
+    {
         this.id = id;
         this.edad = edad;
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
+        this.listaMateria = listaMateria;
     }
 
     public Integer getId() {
@@ -84,5 +89,14 @@ public class Profesor implements Serializable{
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+
+    public List<Materia> getListaMateria() {
+        return listaMateria;
+    }
+
+    public void setListaMateria(List<Materia> listaMateria) {
+        this.listaMateria = listaMateria;
+    }
+    
     
 }
