@@ -23,15 +23,32 @@ import javax.inject.Inject;
  * @author Valentina
  */
 public class ProfesorService extends Datos implements Serializable {
-
+    /**
+     * Lista de profesores
+     */
     private List<Profesor> listaProfesores;
+    /**
+     * Lista de materias
+     */
     private List<Materia> listaMaterias;
+    /**
+     * Id del profesor
+     */
     private int idProfesor;
+    /**
+     * boolean estado del retorno de la consulta sql
+     */
     private boolean estado = true;
-
+    
+    /**
+     * constructor vacio
+     */
     public ProfesorService() {
     }
-
+    /**
+     * Metodo que retorna la lista de todos los profesores registrados 
+     * @throws SQLException 
+     */
     public void listarProfesor() throws SQLException {
 
         listaProfesores = new ArrayList<>();
@@ -52,20 +69,33 @@ public class ProfesorService extends Datos implements Serializable {
 
         }
     }
-
+    /**
+     * metodo que lista al profesor por su cedula 
+     * @param cedula cedula del profesor
+     * @throws Exception 
+     */
     public void listarProfesorCedula(int cedula) throws Exception {
         traerCedula(cedula);
         if (this.estado == false) {
             throw new Exception("Cédula no valida");
         }
     }
+    /**
+     * metodo que lista al profesor por la materia
+     * @param materia material del profesor
+     * @throws Exception 
+     */
     public void listarProfesorMateria(String materia) throws Exception {
         traerMateria(materia);
         if (this.estado == false) {
             throw new Exception("Materia no valida");
         }
     }
-    
+    /**
+     * metodo para arma la lista del profesor, por la materia
+     * @param materia material del profesor 
+     * @throws SQLException 
+     */
     public void traerMateria(String materia) throws SQLException {
         listaProfesores = new ArrayList<>();
         java.sql.Statement st = conexion.createStatement();
@@ -83,7 +113,11 @@ public class ProfesorService extends Datos implements Serializable {
             }while (result.next());
         }
     }
-
+    /**
+     * metodo para armar la lista del profesor, por la cedula
+     * @param cedula cedula del profesor
+     * @throws SQLException 
+     */
     public void traerCedula(int cedula) throws SQLException {
         listaProfesores = new ArrayList<>();
         java.sql.Statement st = conexion.createStatement();
@@ -101,7 +135,10 @@ public class ProfesorService extends Datos implements Serializable {
             }while (result.next());
         }
     }
-
+    /**
+     * Metodo que retorna la lista de las materias de acuerdo al profesor
+     * @throws SQLException 
+     */
     public void listaMateriasProfesor() throws SQLException {
 
         listaMaterias = new ArrayList<>();
@@ -119,7 +156,11 @@ public class ProfesorService extends Datos implements Serializable {
 
         }
     }
-
+    /**
+     * metodo para modificar datos del profesor
+     * @param profesor
+     * @throws SQLException 
+     */
     public void editarProfesor(Profesor profesor) throws SQLException {
         this.idProfesor = Integer.parseInt(profesor.getId().toString());
         int edad = Integer.parseInt(profesor.getEdad().toString());
@@ -129,7 +170,11 @@ public class ProfesorService extends Datos implements Serializable {
         modifacionBaseDatos(cadenaSql);
 
     }
-
+    /**
+     * metodo para registar al profesor
+     * @param profesorInsertar
+     * @throws Exception 
+     */
     public void insertarProfesor(Profesor profesorInsertar) throws Exception {
 
         traerCedula(Integer.parseInt(profesorInsertar.getCedula().toString()));
@@ -147,7 +192,10 @@ public class ProfesorService extends Datos implements Serializable {
             throw new Exception("La cedula ya se encuentra registrada");
         }
     }
-
+   /**
+    * metodo para traer el ultimo id del profesor registrado
+    * @throws SQLException 
+    */
     public void traerUltimoID() throws SQLException {
         java.sql.Statement st = conexion.createStatement();
         String sql = "SELECT MAX(id_profesor) as id_profesor FROM public.profesor;";
@@ -165,7 +213,10 @@ public class ProfesorService extends Datos implements Serializable {
             modifacionBaseDatos(cadenaSql);
         }
     }
-    
+    /**
+     * metodo para eliminar al profesor
+     * @param idProfesor 
+     */
     public void eliminarProfesor(int idProfesor) {
         String cadenaSql = "DELETE FROM public.profesor WHERE id_profesor" + "=" + idProfesor + ";";
         modifacionBaseDatos(cadenaSql);
