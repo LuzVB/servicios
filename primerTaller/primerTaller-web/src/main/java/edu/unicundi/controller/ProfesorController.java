@@ -33,59 +33,63 @@ import javax.ws.rs.core.Response;
 @Stateless
 @Path("/profesores")
 public class ProfesorController {
-        
+
     @Path("/retornarProfesor")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public  Response retornarProfesor() throws SQLException {
+    public Response retornarProfesor() throws SQLException {
         ProfesorService profesor = new ProfesorService();
-        ConexionBD conexion = new ConexionBD();
-        conexion.conectarBaseDatos();
         profesor.listarProfesor();
         return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
-    }  
-    
+    }
+
     @Path("/retornarProfesorCedula/{cedula}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response retornarEstudiantePorCedula(@PathParam("cedula") int cedula) {
         try {
             ProfesorService profesor = new ProfesorService();
-            ConexionBD conexion = new ConexionBD();
-            conexion.conectarBaseDatos();
             profesor.listarProfesorCedula(cedula);
             return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
         } catch (Exception ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Cédula invalida").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
-    } 
-    
+    }
+
     @Path("/editarProfesor")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editar(Profesor profesor) throws SQLException {
-            ProfesorService profesorService = new ProfesorService();
-            ConexionBD conexion = new ConexionBD();
-            conexion.conectarBaseDatos();
-            profesorService.editatrProfesor(profesor);
-            return Response.status(Response.Status.OK).entity("Modificacion Correcta").build();
+        ProfesorService profesorService = new ProfesorService();
+        profesorService.editarProfesor(profesor);
+        return Response.status(Response.Status.OK).entity("Modificacion Correcta").build();
     }
-      
-    
+
     @Path("/insertarProfesor")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response insertarEstudiante(@Valid Profesor profesor){
+    public Response insertarEstudiante(@Valid Profesor profesor) {
         try {
             ProfesorService service = new ProfesorService();
-            ConexionBD conexion = new ConexionBD();
-            conexion.conectarBaseDatos();
             service.insertarProfesor(profesor);
             return Response.status(Response.Status.OK).entity("Se inserto correctamente").build();
         } catch (Exception ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Error al insertar").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+
+    @Path("eliminar/{idProfesor}")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response eliminar(@PathParam("idProfesor") int id) {
+        try {
+            ProfesorService service = new ProfesorService();
+            service.eliminarProfesor(id);
+            return Response.status(Response.Status.OK).entity("Se elimino correctamente").build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error al eliminar profesor").build();
         }
     }
 }

@@ -50,6 +50,17 @@ public class Datos implements Serializable{
 
         }
     }
+    
+    public void modifacionBaseDatos(String cadenaSqlBean){
+        PreparedStatement prepararSentencia = null;
+        try {
+            String cadenaSql = cadenaSqlBean;
+            prepararSentencia = this.conexion.prepareStatement(cadenaSql);
+            prepararSentencia.executeUpdate();
+        } catch (Exception e) {
+
+        }
+    }
 
 
 }
