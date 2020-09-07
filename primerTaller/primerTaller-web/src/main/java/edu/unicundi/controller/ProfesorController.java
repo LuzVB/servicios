@@ -55,15 +55,31 @@ public class ProfesorController {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
+    @Path("/retornarProfesorMateria/{materia}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retornarEstudiantePorMateria(@PathParam("materia") String materia) {
+        try {
+            ProfesorService profesor = new ProfesorService();
+            profesor.listarProfesorMateria(materia);
+            return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
 
     @Path("/editarProfesor")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editar(Profesor profesor) throws SQLException {
-        ProfesorService profesorService = new ProfesorService();
-        profesorService.editarProfesor(profesor);
+        try {
+            ProfesorService profesorService = new ProfesorService();
+            profesorService.editarProfesor(profesor);
         return Response.status(Response.Status.OK).entity("Modificacion Correcta").build();
+        } catch (Exception ex) {
+           return Response.status(Response.Status.BAD_REQUEST).entity("Error al modificar profesor").build();
+        }
     }
 
     @Path("/insertarProfesor")

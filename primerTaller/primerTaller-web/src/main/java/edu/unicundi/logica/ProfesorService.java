@@ -59,6 +59,30 @@ public class ProfesorService extends Datos implements Serializable {
             throw new Exception("Cédula no valida");
         }
     }
+    public void listarProfesorMateria(String materia) throws Exception {
+        traerMateria(materia);
+        if (this.estado == false) {
+            throw new Exception("Materia no valida");
+        }
+    }
+    
+    public void traerMateria(String materia) throws SQLException {
+        listaProfesores = new ArrayList<>();
+        java.sql.Statement st = conexion.createStatement();
+        String sql = "SELECT profesor.id_profesor, profesor.cedula_profesor, profesor.nombre_profesor, profesor.apellido_profesor, profesor.correo_profesor, profesor.edad_correo FROM materia,profesor,profesor_materia where materia.id_materia=profesor_materia.id_materia and profesor_materia.id_profesor=profesor.id_profesor and materia.nombre_materia='"+materia+"';";
+        ResultSet result = st.executeQuery(sql);
+        if (result.next() == false) {
+            this.estado = false;
+        } else {
+            do {
+                this.idProfesor = Integer.parseInt(result.getString("id_profesor"));
+                int edad = Integer.parseInt(result.getString("edad_correo"));
+                int numeroCedula = Integer.parseInt(result.getString("cedula_profesor"));
+                listaMateriasProfesor();
+                listaProfesores.add(new Profesor(this.idProfesor, edad, numeroCedula, result.getString("nombre_profesor"), result.getString("apellido_profesor"), result.getString("correo_profesor"), this.getListaMaterias()));
+            }while (result.next());
+        }
+    }
 
     public void traerCedula(int cedula) throws SQLException {
         listaProfesores = new ArrayList<>();
@@ -97,14 +121,12 @@ public class ProfesorService extends Datos implements Serializable {
     }
 
     public void editarProfesor(Profesor profesor) throws SQLException {
-
         this.idProfesor = Integer.parseInt(profesor.getId().toString());
         int edad = Integer.parseInt(profesor.getEdad().toString());
         int cedula = Integer.parseInt(profesor.getCedula().toString());
         System.out.println(profesor.getNombre() + " " + profesor.getApellido() + " " + profesor.getEdad());
         String cadenaSql = "UPDATE public.profesor SET  id_profesor='" + this.idProfesor + "',cedula_profesor='" + cedula + "',nombre_profesor='" + profesor.getNombre() + "',apellido_profesor='" + profesor.getApellido() + "',correo_profesor='" + profesor.getCorreo() + "',edad_correo='" + edad + "' WHERE id_profesor=" + this.idProfesor + ";";
-        FacesMessage message = new FacesMessage("Editó el profesor: " + profesor.getNombre());
-        modifacionBaseDatos(cadenaSql, message);
+        modifacionBaseDatos(cadenaSql);
 
     }
 
