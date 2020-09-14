@@ -31,9 +31,9 @@ public class ConexionBD {
      */
     public void conectarBaseDatos() throws SQLException {
         String usuario = "postgres";
-        String contrasena ="admin";
-        String nombreDB = "profesor";
-        String cadenaConexion = "jdbc:postgresql://localhost:5432/"+nombreDB;
+        String contrasena ="1234";
+        String nombreDB = "Docentes3";
+        String cadenaConexion = "jdbc:postgresql://localhost:5433/"+nombreDB;
 
         try {
             Class.forName("org.postgresql.Driver");

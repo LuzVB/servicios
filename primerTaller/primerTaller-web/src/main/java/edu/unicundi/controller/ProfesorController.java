@@ -8,6 +8,10 @@ package edu.unicundi.controller;
 import edu.unicundi.controller.pojo.Profesor;
 import edu.unicundi.controller.pojo.ConexionBD;
 import edu.unicundi.logica.ProfesorService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,11 +36,18 @@ import javax.ws.rs.core.Response;
  */
 @Stateless
 @Path("/profesores")
+@Api(value = "/profesores", description = "Api para el manejo de la informacion de los profesores")
 public class ProfesorController {
 
     @Path("/retornarProfesor")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+      @ApiOperation(produces = "application/json", value = "Retorna la lista de todos los profesores", consumes = "aplication/json",
+            httpMethod = "GET")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response retornarProfesor() throws SQLException {
         ProfesorService profesor = new ProfesorService();
         profesor.listarProfesor();
@@ -46,6 +57,12 @@ public class ProfesorController {
     @Path("/retornarProfesorCedula/{cedula}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+     @ApiOperation(produces = "application/json", value = "Retorna la lista de datos del profesor por la cedula ", consumes = "aplication/json",
+            httpMethod = "GET")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response retornarEstudiantePorCedula(@PathParam("cedula") int cedula) {
         try {
             ProfesorService profesor = new ProfesorService();
@@ -58,6 +75,12 @@ public class ProfesorController {
     @Path("/retornarProfesorMateria/{materia}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+     @ApiOperation(produces = "application/json", value = "Retorna la lista de todos los profesores por la materia", consumes = "aplication/json",
+            httpMethod = "GET")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response retornarEstudiantePorMateria(@PathParam("materia") String materia) {
         try {
             ProfesorService profesor = new ProfesorService();
@@ -72,6 +95,15 @@ public class ProfesorController {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(produces = "application/json", value = "Edita los datos del profesor", consumes = "aplication/json",
+            httpMethod = "PUT")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 422, message = "Invalid data"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 405, message = "Method Not Allowed"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response editar(Profesor profesor) throws SQLException {
         try {
             ProfesorService profesorService = new ProfesorService();
@@ -81,11 +113,19 @@ public class ProfesorController {
            return Response.status(Response.Status.BAD_REQUEST).entity("Error al modificar profesor").build();
         }
     }
-
+     
     @Path("/insertarProfesor")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(produces = "application/json", value = "Insertar un al profesor con su correspondientes datos", consumes = "aplication/json",
+            httpMethod = "POST")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 422, message = "Invalid data"),
+        @ApiResponse(code = 405, message = "Method Not Allowed"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response insertarEstudiante(@Valid Profesor profesor) {
         try {
             ProfesorService service = new ProfesorService();
@@ -95,10 +135,18 @@ public class ProfesorController {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
-
+    
     @Path("eliminar/{idProfesor}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
+      @ApiOperation(produces = "application/json", value = "Elimina un profesor de la BD", consumes = "aplication/json",
+            httpMethod = "DELETE")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 405, message = "Method Not Allowed"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response eliminar(@PathParam("idProfesor") int id) {
         try {
             ProfesorService service = new ProfesorService();
