@@ -5,13 +5,13 @@
  */
 package edu.unicundi.controller;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import edu.unicundi.controller.pojo.Profesor;
 import edu.unicundi.controller.pojo.ConexionBD;
 import edu.unicundi.logica.ProfesorService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;

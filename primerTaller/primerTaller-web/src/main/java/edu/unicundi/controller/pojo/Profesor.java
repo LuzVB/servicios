@@ -5,8 +5,9 @@
  */
 package edu.unicundi.controller.pojo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Id;
@@ -62,7 +63,7 @@ public class Profesor implements Serializable{
         this.listaMateria = listaMateria;
     }
 
-    @ApiModelProperty(value = "Id del profesor", example = "1")
+    @ApiModelProperty(value = "Id del profesor")
     public Integer getId() {
         return id;
     }
@@ -71,7 +72,7 @@ public class Profesor implements Serializable{
         this.id = id;
     }
     
-    @ApiModelProperty(value = "edad del profesor", example = "35")
+    @ApiModelProperty(value = "edad del profesor")
     public Integer getEdad() {
         return edad;
     }
@@ -79,7 +80,7 @@ public class Profesor implements Serializable{
     public void setEdad(Integer edad) {
         this.edad = edad;
     }
-    @ApiModelProperty(value = "cedula del profesor", example = "1070988170")
+    @ApiModelProperty(value = "cedula del profesor")
     public Integer getCedula() {
         return cedula;
     }
@@ -87,7 +88,7 @@ public class Profesor implements Serializable{
     public void setCedula(Integer cedula) {
         this.cedula = cedula;
     }
-    @ApiModelProperty(value = "nombre del profesor", example = "Luz")
+    @ApiModelProperty(value = "nombre del profesor")
     public String getNombre() {
         return nombre;
     }
@@ -95,7 +96,7 @@ public class Profesor implements Serializable{
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    @ApiModelProperty(value = "apellido del profesor", example = "Velasquez")
+    @ApiModelProperty(value = "apellido del profesor")
     public String getApellido() {
         return apellido;
     }
@@ -103,7 +104,7 @@ public class Profesor implements Serializable{
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
-    @ApiModelProperty(value = "correo del profesor", example = "Valen@gmail.com")
+    @ApiModelProperty(value = "correo del profesor")
     public String getCorreo() {
         return correo;
     }
@@ -111,7 +112,7 @@ public class Profesor implements Serializable{
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-    @ApiModelProperty(value = "lista de materias del  profesor", example = "\"id\":1\"nombre\":\"Matematicas\",\"cupo\": 15,\"credito\": 4")
+    @ApiModelProperty(value = "lista de materias del  profesor")
     public List<Materia> getListaMateria() {
         return listaMateria;
     }
