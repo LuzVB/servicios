@@ -7,22 +7,21 @@ package edu.unicundi.logica;
 
 import edu.unicundi.controller.pojo.Materia;
 import edu.unicundi.controller.pojo.Profesor;
-import edu.unicundi.logica.Datos;
+import edu.unicundi.exception.IdVacionException;
+import edu.unicundi.exception.ListaVaciaException;
+import edu.unicundi.exception.NoValidoException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.application.FacesMessage;
-import javax.inject.Inject;
 
 /**
  *
  * @author Valentina
  */
 public class ProfesorService extends Datos implements Serializable {
+
     /**
      * Lista de profesores
      */
@@ -39,105 +38,124 @@ public class ProfesorService extends Datos implements Serializable {
      * boolean estado del retorno de la consulta sql
      */
     private boolean estado = true;
-    
+
     /**
      * constructor vacio
      */
     public ProfesorService() {
     }
+
     /**
-     * Metodo que retorna la lista de todos los profesores registrados 
-     * @throws SQLException 
+     * Metodo que retorna la lista de todos los profesores registrados
      */
-    public void listarProfesor() throws SQLException {
-
-        listaProfesores = new ArrayList<>();
-        java.sql.Statement st = conexion.createStatement();
-        System.out.println("AQUIII " + listaMaterias);
+    public void listarProfesor() {
         try {
-            String sql = "SELECT id_profesor, cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo\n" + "FROM public.profesor;";
+            listaProfesores = new ArrayList<>();
+            java.sql.Statement st = conexion.createStatement();
+            System.out.println("AQUIII " + listaMaterias);
+            String sql = "SELECT cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo, id_profesor FROM public.profesor;";
             ResultSet result = st.executeQuery(sql);
-            while (result.next()) {
-                this.idProfesor = Integer.parseInt(result.getString("id_profesor"));
-                int edad = Integer.parseInt(result.getString("edad_correo"));
-                int cedula = Integer.parseInt(result.getString("cedula_profesor"));
-                listaMateriasProfesor();
-                listaProfesores.add(new Profesor(this.idProfesor, edad, cedula, result.getString("nombre_profesor"), result.getString("apellido_profesor"), result.getString("correo_profesor"), this.getListaMaterias()));
+            if (result.next() == false) {
+                throw new ListaVaciaException("No hay datos registrados");
+            } else {
+                do {
+                    this.idProfesor = Integer.parseInt(result.getString("id_profesor"));
+                    int edad = Integer.parseInt(result.getString("edad_correo"));
+                    int cedula = Integer.parseInt(result.getString("cedula_profesor"));
+                    listaMateriasProfesor();
+                    listaProfesores.add(new Profesor(this.idProfesor, edad, cedula, result.getString("nombre_profesor"), result.getString("apellido_profesor"), result.getString("correo_profesor"), this.getListaMaterias()));
+                } while (result.next());
             }
-
-        } catch (Exception e) {
+        } catch (SQLException ex) {
 
         }
     }
+
     /**
-     * metodo que lista al profesor por su cedula 
+     * metodo que lista al profesor por su cedula
+     *
      * @param cedula cedula del profesor
-     * @throws Exception 
+     * @throws Exception
      */
-    public void listarProfesorCedula(int cedula) throws Exception {
+    public void listarProfesorCedula(int cedula) {
         traerCedula(cedula);
         if (this.estado == false) {
-            throw new Exception("Cédula no valida");
+            throw new NoValidoException("Cédula no valida");
         }
     }
+
     /**
      * metodo que lista al profesor por la materia
+     *
      * @param materia material del profesor
-     * @throws Exception 
+     * @throws Exception
      */
-    public void listarProfesorMateria(String materia) throws Exception {
+    public void listarProfesorMateria(String materia) {
         traerMateria(materia);
         if (this.estado == false) {
-            throw new Exception("Materia no valida");
+            throw new NoValidoException("Materia no valida");
         }
     }
+
     /**
      * metodo para arma la lista del profesor, por la materia
-     * @param materia material del profesor 
-     * @throws SQLException 
+     *
+     * @param materia material del profesor
+     * @throws SQLException
      */
-    public void traerMateria(String materia) throws SQLException {
-        listaProfesores = new ArrayList<>();
-        java.sql.Statement st = conexion.createStatement();
-        String sql = "SELECT profesor.id_profesor, profesor.cedula_profesor, profesor.nombre_profesor, profesor.apellido_profesor, profesor.correo_profesor, profesor.edad_correo FROM materia,profesor,profesor_materia where materia.id_materia=profesor_materia.id_materia and profesor_materia.id_profesor=profesor.id_profesor and materia.nombre_materia='"+materia+"';";
-        ResultSet result = st.executeQuery(sql);
-        if (result.next() == false) {
-            this.estado = false;
-        } else {
-            do {
-                this.idProfesor = Integer.parseInt(result.getString("id_profesor"));
-                int edad = Integer.parseInt(result.getString("edad_correo"));
-                int numeroCedula = Integer.parseInt(result.getString("cedula_profesor"));
-                listaMateriasProfesor();
-                listaProfesores.add(new Profesor(this.idProfesor, edad, numeroCedula, result.getString("nombre_profesor"), result.getString("apellido_profesor"), result.getString("correo_profesor"), this.getListaMaterias()));
-            }while (result.next());
+    public void traerMateria(String materia) {
+        try {
+            listaProfesores = new ArrayList<>();
+            java.sql.Statement st = conexion.createStatement();
+            String sql = "SELECT profesor.id_profesor, profesor.cedula_profesor, profesor.nombre_profesor, profesor.apellido_profesor, profesor.correo_profesor, profesor.edad_correo FROM materia,profesor,profesor_materia where materia.id_materia=profesor_materia.id_materia and profesor_materia.id_profesor=profesor.id_profesor and materia.nombre_materia='" + materia + "';";
+            ResultSet result = st.executeQuery(sql);
+            if (result.next() == false) {
+                this.estado = false;
+            } else {
+                do {
+                    this.idProfesor = Integer.parseInt(result.getString("id_profesor"));
+                    int edad = Integer.parseInt(result.getString("edad_correo"));
+                    int numeroCedula = Integer.parseInt(result.getString("cedula_profesor"));
+                    listaMateriasProfesor();
+                    listaProfesores.add(new Profesor(this.idProfesor, edad, numeroCedula, result.getString("nombre_profesor"), result.getString("apellido_profesor"), result.getString("correo_profesor"), this.getListaMaterias()));
+                } while (result.next());
+            }
+        } catch (SQLException ex) {
+
         }
     }
+
     /**
      * metodo para armar la lista del profesor, por la cedula
+     *
      * @param cedula cedula del profesor
-     * @throws SQLException 
      */
-    public void traerCedula(int cedula) throws SQLException {
-        listaProfesores = new ArrayList<>();
-        java.sql.Statement st = conexion.createStatement();
-        String sql = "SELECT id_profesor, cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo FROM public.profesor where cedula_profesor=" + cedula + ";";
-        ResultSet result = st.executeQuery(sql);
-        if (result.next() == false) {
-            this.estado = false;
-        } else {
-            do {
-                this.idProfesor = Integer.parseInt(result.getString("id_profesor"));
-                int edad = Integer.parseInt(result.getString("edad_correo"));
-                int numeroCedula = Integer.parseInt(result.getString("cedula_profesor"));
-                listaMateriasProfesor();
-                listaProfesores.add(new Profesor(this.idProfesor, edad, numeroCedula, result.getString("nombre_profesor"), result.getString("apellido_profesor"), result.getString("correo_profesor"), this.getListaMaterias()));
-            }while (result.next());
+    public void traerCedula(int cedula) {
+        try {
+            listaProfesores = new ArrayList<>();
+            java.sql.Statement st = conexion.createStatement();
+            String sql = "SELECT id_profesor, cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo FROM public.profesor where cedula_profesor=" + cedula + ";";
+            ResultSet result = st.executeQuery(sql);
+            if (result.next() == false) {
+                this.estado = false;
+            } else {
+                do {
+                    this.idProfesor = Integer.parseInt(result.getString("id_profesor"));
+                    int edad = Integer.parseInt(result.getString("edad_correo"));
+                    int numeroCedula = Integer.parseInt(result.getString("cedula_profesor"));
+                    listaMateriasProfesor();
+                    listaProfesores.add(new Profesor(this.idProfesor, edad, numeroCedula, result.getString("nombre_profesor"), result.getString("apellido_profesor"), result.getString("correo_profesor"), this.getListaMaterias()));
+                } while (result.next());
+            }
+        } catch (SQLException ex) {
+
         }
     }
+
     /**
      * Metodo que retorna la lista de las materias de acuerdo al profesor
-     * @throws SQLException 
+     *
+     * @throws SQLException
      */
     public void listaMateriasProfesor() throws SQLException {
 
@@ -156,46 +174,60 @@ public class ProfesorService extends Datos implements Serializable {
 
         }
     }
+
     /**
      * metodo para modificar datos del profesor
+     *
      * @param profesor
-     * @throws SQLException 
      */
-    public void editarProfesor(Profesor profesor) throws SQLException {
-        this.idProfesor = Integer.parseInt(profesor.getId().toString());
-        int edad = Integer.parseInt(profesor.getEdad().toString());
-        int cedula = Integer.parseInt(profesor.getCedula().toString());
-        System.out.println(profesor.getNombre() + " " + profesor.getApellido() + " " + profesor.getEdad());
-        String cadenaSql = "UPDATE public.profesor SET  id_profesor='" + this.idProfesor + "',cedula_profesor='" + cedula + "',nombre_profesor='" + profesor.getNombre() + "',apellido_profesor='" + profesor.getApellido() + "',correo_profesor='" + profesor.getCorreo() + "',edad_correo='" + edad + "' WHERE id_profesor=" + this.idProfesor + ";";
-        modifacionBaseDatos(cadenaSql);
+    public void editarProfesor(Profesor profesor) {
 
+        if (profesor.getNombre() == null || profesor.getId() == null
+                || profesor.getEdad() == null || profesor.getCorreo() == null
+                || profesor.getApellido() == null || profesor.getCedula() == null) {
+            throw new IdVacionException("Uno de los atributos del JSON esta vacio");
+        } else {
+            this.idProfesor = Integer.parseInt(profesor.getId().toString());
+            int edad = Integer.parseInt(profesor.getEdad().toString());
+            int cedula = Integer.parseInt(profesor.getCedula().toString());
+            System.out.println(profesor.getNombre() + " " + profesor.getApellido() + " " + profesor.getEdad());
+            String cadenaSql = "UPDATE public.profesor SET  id_profesor='" + this.idProfesor + "',cedula_profesor='" + cedula + "',nombre_profesor='" + profesor.getNombre() + "',apellido_profesor='" + profesor.getApellido() + "',correo_profesor='" + profesor.getCorreo() + "',edad_correo='" + edad + "' WHERE id_profesor=" + this.idProfesor + ";";
+            modifacionBaseDatos(cadenaSql);
+        }
     }
+
     /**
      * metodo para registar al profesor
+     *
      * @param profesorInsertar
-     * @throws Exception 
+     * @throws Exception
      */
     public void insertarProfesor(Profesor profesorInsertar) throws Exception {
 
-        traerCedula(Integer.parseInt(profesorInsertar.getCedula().toString()));
-        if (estado == false) {
-//            String cadenaSql = " INSERT INTO public.profesor(id_profesor, cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo)"
-//                    + "VALUES ((SELECT MAX(id_profesor)+1 as id_profesor FROM public.profesor)," + Integer.parseInt(profesorInsertar.getCedula().toString()) + ",'"
-//                    + profesorInsertar.getNombre() + "','" + profesorInsertar.getApellido() + "','" + profesorInsertar.getCorreo() + "'," + Integer.parseInt(profesorInsertar.getEdad().toString()) + ");";
-            String cadenaSql = " INSERT INTO public.profesor(cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo)"
-                    + "VALUES (" + Integer.parseInt(profesorInsertar.getCedula().toString()) + ",'"
-                    + profesorInsertar.getNombre() + "','" + profesorInsertar.getApellido() + "','" + profesorInsertar.getCorreo() + "'," + Integer.parseInt(profesorInsertar.getEdad().toString()) + ");";
-            modifacionBaseDatos(cadenaSql);
-            traerUltimoID();
-            insertarTablaAsociativa(profesorInsertar.getListaMateria(), this.idProfesor);
+        if (profesorInsertar.getNombre() == null || profesorInsertar.getEdad() == null || profesorInsertar.getCorreo() == null
+                || profesorInsertar.getApellido() == null || profesorInsertar.getCedula() == null) {
+            throw new IdVacionException("Uno de los atributos del JSON esta vacio");
         } else {
-            throw new Exception("La cedula ya se encuentra registrada");
+            traerCedula(Integer.parseInt(profesorInsertar.getCedula().toString()));
+            if (estado == false) {
+                String cadenaSql = " INSERT INTO public.profesor(cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo)"
+                        + "VALUES (" + Integer.parseInt(profesorInsertar.getCedula().toString()) + ",'"
+                        + profesorInsertar.getNombre() + "','" + profesorInsertar.getApellido() + "','" + profesorInsertar.getCorreo() + "'," + Integer.parseInt(profesorInsertar.getEdad().toString()) + ");";
+                modifacionBaseDatos(cadenaSql);
+                traerUltimoID();
+                insertarTablaAsociativa(profesorInsertar.getListaMateria(), this.idProfesor);
+            } else {
+                throw new NoValidoException("La cedula ya se encuentra registrada");
+            }
         }
+
     }
-   /**
-    * metodo para traer el ultimo id del profesor registrado
-    * @throws SQLException 
-    */
+
+    /**
+     * metodo para traer el ultimo id del profesor registrado
+     *
+     * @throws SQLException
+     */
     public void traerUltimoID() throws SQLException {
         java.sql.Statement st = conexion.createStatement();
         String sql = "SELECT MAX(id_profesor) as id_profesor FROM public.profesor;";
@@ -213,13 +245,27 @@ public class ProfesorService extends Datos implements Serializable {
             modifacionBaseDatos(cadenaSql);
         }
     }
+
     /**
      * metodo para eliminar al profesor
-     * @param idProfesor 
+     *
+     * @param idProfesor
      */
     public void eliminarProfesor(int idProfesor) {
-        String cadenaSql = "DELETE FROM public.profesor WHERE id_profesor" + "=" + idProfesor + ";";
-        modifacionBaseDatos(cadenaSql);
+        try {
+            listaProfesores = new ArrayList<>();
+            java.sql.Statement st = conexion.createStatement();
+            String sql = "SELECT id_profesor, cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo FROM public.profesor where id_profesor=" + idProfesor + ";";
+            ResultSet result = st.executeQuery(sql);
+            if (result.next() == false) {
+                throw new NoValidoException("Id no encontrado");
+            } else {
+                String cadenaSql = "DELETE FROM public.profesor WHERE id_profesor" + "=" + idProfesor + ";";
+                modifacionBaseDatos(cadenaSql);
+            }
+        } catch (SQLException ex) {
+
+        }
     }
 
     public List<Profesor> getListaProfesores() {

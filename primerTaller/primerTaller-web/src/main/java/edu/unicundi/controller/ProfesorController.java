@@ -10,14 +10,10 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import edu.unicundi.controller.pojo.Profesor;
-import edu.unicundi.controller.pojo.ConexionBD;
+import edu.unicundi.controller.pojo.ErrorWrraper;
 import edu.unicundi.logica.ProfesorService;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -42,7 +38,7 @@ public class ProfesorController {
     @Path("/retornarProfesor")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-      @ApiOperation(produces = "application/json", value = "Retorna la lista de todos los profesores", consumes = "aplication/json",
+    @ApiOperation(produces = "application/json", value = "Retorna la lista de todos los profesores", consumes = "aplication/json",
             httpMethod = "GET")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
@@ -57,38 +53,31 @@ public class ProfesorController {
     @Path("/retornarProfesorCedula/{cedula}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-     @ApiOperation(produces = "application/json", value = "Retorna la lista de datos del profesor por la cedula ", consumes = "aplication/json",
+    @ApiOperation(produces = "application/json", value = "Retorna la lista de datos del profesor por la cedula ", consumes = "aplication/json",
             httpMethod = "GET")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response retornarEstudiantePorCedula(@PathParam("cedula") int cedula) {
-        try {
-            ProfesorService profesor = new ProfesorService();
-            profesor.listarProfesorCedula(cedula);
-            return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
-        } catch (Exception ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
-        }
+        ProfesorService profesor = new ProfesorService();
+        profesor.listarProfesorCedula(cedula);
+        return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
     }
+
     @Path("/retornarProfesorMateria/{materia}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-     @ApiOperation(produces = "application/json", value = "Retorna la lista de todos los profesores por la materia", consumes = "aplication/json",
+    @ApiOperation(produces = "application/json", value = "Retorna la lista de todos los profesores por la materia", consumes = "aplication/json",
             httpMethod = "GET")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response retornarEstudiantePorMateria(@PathParam("materia") String materia) {
-        try {
-            ProfesorService profesor = new ProfesorService();
-            profesor.listarProfesorMateria(materia);
-            return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
-        } catch (Exception ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
-        }
+        ProfesorService profesor = new ProfesorService();
+        profesor.listarProfesorMateria(materia);
+        return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
     }
 
     @Path("/editarProfesor")
@@ -105,15 +94,11 @@ public class ProfesorController {
         @ApiResponse(code = 405, message = "Method Not Allowed"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response editar(Profesor profesor) throws SQLException {
-        try {
-            ProfesorService profesorService = new ProfesorService();
-            profesorService.editarProfesor(profesor);
-        return Response.status(Response.Status.OK).entity("Modificacion Correcta").build();
-        } catch (Exception ex) {
-           return Response.status(Response.Status.BAD_REQUEST).entity("Error al modificar profesor").build();
-        }
+        ProfesorService profesorService = new ProfesorService();
+        profesorService.editarProfesor(profesor);
+        return Response.status(Response.Status.OK).build();
     }
-     
+
     @Path("/insertarProfesor")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -126,20 +111,16 @@ public class ProfesorController {
         @ApiResponse(code = 422, message = "Invalid data"),
         @ApiResponse(code = 405, message = "Method Not Allowed"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
-    public Response insertarEstudiante(@Valid Profesor profesor) {
-        try {
-            ProfesorService service = new ProfesorService();
-            service.insertarProfesor(profesor);
-            return Response.status(Response.Status.OK).entity("Se inserto correctamente").build();
-        } catch (Exception ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
-        }
+    public Response insertarEstudiante(@Valid Profesor profesor) throws Exception {
+        ProfesorService service = new ProfesorService();
+        service.insertarProfesor(profesor);
+        return Response.status(Response.Status.CREATED).build();
     }
-    
+
     @Path("eliminar/{idProfesor}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-      @ApiOperation(produces = "application/json", value = "Elimina un profesor de la BD", consumes = "aplication/json",
+    @ApiOperation(produces = "application/json", value = "Elimina un profesor de la BD", consumes = "aplication/json",
             httpMethod = "DELETE")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
@@ -148,12 +129,8 @@ public class ProfesorController {
         @ApiResponse(code = 405, message = "Method Not Allowed"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response eliminar(@PathParam("idProfesor") int id) {
-        try {
-            ProfesorService service = new ProfesorService();
-            service.eliminarProfesor(id);
-            return Response.status(Response.Status.OK).entity("Se elimino correctamente").build();
-        } catch (Exception ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Error al eliminar profesor").build();
-        }
+        ProfesorService service = new ProfesorService();
+        service.eliminarProfesor(id);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }

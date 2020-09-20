@@ -21,7 +21,6 @@ import javax.validation.constraints.NotNull;
 public class Profesor implements Serializable{
     
     @Id
-    @NotNull 
     @ApiModelProperty(value = "id del profesro", required = true)
     private Integer id;
     
@@ -63,60 +62,67 @@ public class Profesor implements Serializable{
         this.listaMateria = listaMateria;
     }
 
-    @ApiModelProperty(value = "Id del profesor")
+    @ApiModelProperty(value = "Mostrar Id del profesor")
     public Integer getId() {
         return id;
     }
 
+    @ApiModelProperty(value = "Modificar id del profesor")
     public void setId(Integer id) {
         this.id = id;
     }
     
-    @ApiModelProperty(value = "edad del profesor")
+    @ApiModelProperty(value = "Mostrar edad del profesor")
     public Integer getEdad() {
         return edad;
     }
 
+    @ApiModelProperty(value = "Modificar edad del profesor")
     public void setEdad(Integer edad) {
         this.edad = edad;
     }
-    @ApiModelProperty(value = "cedula del profesor")
+    @ApiModelProperty(value = "Mostrar cedula del profesor")
     public Integer getCedula() {
         return cedula;
     }
 
+    @ApiModelProperty(value = "Modificar cedula del profesor")
     public void setCedula(Integer cedula) {
         this.cedula = cedula;
     }
-    @ApiModelProperty(value = "nombre del profesor")
+    @ApiModelProperty(value = "Mostrar nombre del profesor")
     public String getNombre() {
         return nombre;
     }
 
+    @ApiModelProperty(value = "Modificar nombre del profesor")
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    @ApiModelProperty(value = "apellido del profesor")
+    @ApiModelProperty(value = "Mostrar apellido del profesor" )
     public String getApellido() {
         return apellido;
     }
 
+    @ApiModelProperty(value = "Modificar apellido del profesor")
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
-    @ApiModelProperty(value = "correo del profesor")
+    @ApiModelProperty(value = "Mostrar correo del profesor")
     public String getCorreo() {
         return correo;
     }
 
+    @ApiModelProperty(value = "Modificar correo del profesor")
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-    @ApiModelProperty(value = "lista de materias del  profesor")
+    @ApiModelProperty(value = "Mostrar lista de materias del  profesor")
     public List<Materia> getListaMateria() {
         return listaMateria;
     }
 
+    @ApiModelProperty(value = "Modificar lista de materias del profesor")
     public void setListaMateria(List<Materia> listaMateria) {
         this.listaMateria = listaMateria;
     }
