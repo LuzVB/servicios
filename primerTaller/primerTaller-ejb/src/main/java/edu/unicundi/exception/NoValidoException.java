@@ -9,11 +9,11 @@ package edu.unicundi.exception;
  *
  * @author Valentina
  */
-public class ListaVaciaException extends RuntimeException {
+public class NoValidoException extends RuntimeException {
 
-    public ListaVaciaException(String message) {
+    public NoValidoException(String message) {
         super(message);
     }
     
-    
 }
+

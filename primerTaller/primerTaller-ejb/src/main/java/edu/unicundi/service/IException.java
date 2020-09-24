@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unicundi.logica;
+package edu.unicundi.service;
 
 /**
  *
- * @author Luz
+ * @author Valentina
  */
-public class MateriaService {
+public interface IException {
     
 }

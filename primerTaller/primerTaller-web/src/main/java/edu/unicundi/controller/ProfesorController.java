@@ -9,10 +9,11 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
-import edu.unicundi.controller.pojo.Profesor;
 import edu.unicundi.controller.pojo.ErrorWrraper;
-import edu.unicundi.logica.ProfesorService;
+import edu.unicundi.dto.Profesor;
+import edu.unicundi.service.IProfesorService;
 import java.sql.SQLException;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -35,6 +36,9 @@ import javax.ws.rs.core.Response;
 @Api(value = "/profesores", description = "Api para el manejo de la informacion de los profesores")
 public class ProfesorController {
 
+    @EJB
+    public IProfesorService service;
+   
     @Path("/retornarProfesor")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -45,9 +49,8 @@ public class ProfesorController {
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response retornarProfesor() throws SQLException {
-        ProfesorService profesor = new ProfesorService();
-        profesor.listarProfesor();
-        return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
+        service.listarProfesor();
+        return Response.status(Response.Status.OK).entity(service.getListaProfesores()).build();
     }
 
     @Path("/retornarProfesorCedula/{cedula}")
@@ -60,9 +63,8 @@ public class ProfesorController {
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response retornarEstudiantePorCedula(@PathParam("cedula") int cedula) {
-        ProfesorService profesor = new ProfesorService();
-        profesor.listarProfesorCedula(cedula);
-        return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
+        service.listarProfesorCedula(cedula);
+        return Response.status(Response.Status.OK).entity(service.getListaProfesores()).build();
     }
 
     @Path("/retornarProfesorMateria/{materia}")
@@ -75,9 +77,8 @@ public class ProfesorController {
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response retornarEstudiantePorMateria(@PathParam("materia") String materia) {
-        ProfesorService profesor = new ProfesorService();
-        profesor.listarProfesorMateria(materia);
-        return Response.status(Response.Status.OK).entity(profesor.getListaProfesores()).build();
+        service.listarProfesorMateria(materia);
+        return Response.status(Response.Status.OK).entity(service.getListaProfesores()).build();
     }
 
     @Path("/editarProfesor")
@@ -94,8 +95,7 @@ public class ProfesorController {
         @ApiResponse(code = 405, message = "Method Not Allowed"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response editar(Profesor profesor) throws SQLException {
-        ProfesorService profesorService = new ProfesorService();
-        profesorService.editarProfesor(profesor);
+        service.editarProfesor(profesor);
         return Response.status(Response.Status.OK).build();
     }
 
@@ -112,7 +112,6 @@ public class ProfesorController {
         @ApiResponse(code = 405, message = "Method Not Allowed"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response insertarEstudiante(@Valid Profesor profesor) throws Exception {
-        ProfesorService service = new ProfesorService();
         service.insertarProfesor(profesor);
         return Response.status(Response.Status.CREATED).build();
     }
@@ -129,7 +128,6 @@ public class ProfesorController {
         @ApiResponse(code = 405, message = "Method Not Allowed"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response eliminar(@PathParam("idProfesor") int id) {
-        ProfesorService service = new ProfesorService();
         service.eliminarProfesor(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }

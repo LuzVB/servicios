@@ -3,25 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unicundi.logica;
+package edu.unicundi.service.impl;
 
-import edu.unicundi.controller.pojo.Materia;
-import edu.unicundi.controller.pojo.Profesor;
-import edu.unicundi.exception.IdVacionException;
+import edu.unicundi.dto.Materia;
+import edu.unicundi.dto.Profesor;
+import edu.unicundi.exception.IdVacioException;
 import edu.unicundi.exception.ListaVaciaException;
 import edu.unicundi.exception.NoValidoException;
-import java.io.Serializable;
+import edu.unicundi.service.IProfesorService;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 /**
  *
  * @author Valentina
  */
-public class ProfesorService extends Datos implements Serializable {
-
+@Stateless
+//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW) 
+public class ProfesorServiceImpl extends DatosImpl implements IProfesorService {
     /**
      * Lista de profesores
      */
@@ -40,14 +44,9 @@ public class ProfesorService extends Datos implements Serializable {
     private boolean estado = true;
 
     /**
-     * constructor vacio
-     */
-    public ProfesorService() {
-    }
-
-    /**
      * Metodo que retorna la lista de todos los profesores registrados
      */
+    @Override
     public void listarProfesor() {
         try {
             listaProfesores = new ArrayList<>();
@@ -77,6 +76,7 @@ public class ProfesorService extends Datos implements Serializable {
      * @param cedula cedula del profesor
      * @throws Exception
      */
+    @Override
     public void listarProfesorCedula(int cedula) {
         traerCedula(cedula);
         if (this.estado == false) {
@@ -90,6 +90,7 @@ public class ProfesorService extends Datos implements Serializable {
      * @param materia material del profesor
      * @throws Exception
      */
+    @Override
     public void listarProfesorMateria(String materia) {
         traerMateria(materia);
         if (this.estado == false) {
@@ -103,6 +104,7 @@ public class ProfesorService extends Datos implements Serializable {
      * @param materia material del profesor
      * @throws SQLException
      */
+    @Override
     public void traerMateria(String materia) {
         try {
             listaProfesores = new ArrayList<>();
@@ -130,6 +132,7 @@ public class ProfesorService extends Datos implements Serializable {
      *
      * @param cedula cedula del profesor
      */
+    @Override
     public void traerCedula(int cedula) {
         try {
             listaProfesores = new ArrayList<>();
@@ -157,6 +160,7 @@ public class ProfesorService extends Datos implements Serializable {
      *
      * @throws SQLException
      */
+    @Override
     public void listaMateriasProfesor() throws SQLException {
 
         listaMaterias = new ArrayList<>();
@@ -170,7 +174,7 @@ public class ProfesorService extends Datos implements Serializable {
                 int creditosMateria = Integer.parseInt(result2.getString("creditos_materia"));
                 listaMaterias.add(new Materia(idMateria, result2.getString("nombre_materia"), cuposMateria, creditosMateria));
             }
-        } catch (Exception e) {
+        } catch (SQLException | NumberFormatException e) {
 
         }
     }
@@ -180,12 +184,13 @@ public class ProfesorService extends Datos implements Serializable {
      *
      * @param profesor
      */
+    @Override
     public void editarProfesor(Profesor profesor) {
 
         if (profesor.getNombre() == null || profesor.getId() == null
                 || profesor.getEdad() == null || profesor.getCorreo() == null
                 || profesor.getApellido() == null || profesor.getCedula() == null) {
-            throw new IdVacionException("Uno de los atributos del JSON esta vacio");
+            throw new IdVacioException("Uno de los atributos del JSON esta vacio");
         } else {
             this.idProfesor = Integer.parseInt(profesor.getId().toString());
             int edad = Integer.parseInt(profesor.getEdad().toString());
@@ -202,11 +207,12 @@ public class ProfesorService extends Datos implements Serializable {
      * @param profesorInsertar
      * @throws Exception
      */
+    @Override
     public void insertarProfesor(Profesor profesorInsertar) throws Exception {
 
         if (profesorInsertar.getNombre() == null || profesorInsertar.getEdad() == null || profesorInsertar.getCorreo() == null
                 || profesorInsertar.getApellido() == null || profesorInsertar.getCedula() == null) {
-            throw new IdVacionException("Uno de los atributos del JSON esta vacio");
+            throw new IdVacioException("Uno de los atributos del JSON esta vacio");
         } else {
             traerCedula(Integer.parseInt(profesorInsertar.getCedula().toString()));
             if (estado == false) {
@@ -228,6 +234,7 @@ public class ProfesorService extends Datos implements Serializable {
      *
      * @throws SQLException
      */
+    @Override
     public void traerUltimoID() throws SQLException {
         java.sql.Statement st = conexion.createStatement();
         String sql = "SELECT MAX(id_profesor) as id_profesor FROM public.profesor;";
@@ -251,6 +258,7 @@ public class ProfesorService extends Datos implements Serializable {
      *
      * @param idProfesor
      */
+    @Override
     public void eliminarProfesor(int idProfesor) {
         try {
             listaProfesores = new ArrayList<>();
@@ -268,6 +276,7 @@ public class ProfesorService extends Datos implements Serializable {
         }
     }
 
+    @Override
     public List<Profesor> getListaProfesores() {
         return listaProfesores;
     }
@@ -291,5 +300,4 @@ public class ProfesorService extends Datos implements Serializable {
     public void setIdProfesor(int idProfesor) {
         this.idProfesor = idProfesor;
     }
-
 }

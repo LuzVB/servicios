@@ -9,6 +9,9 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import edu.unicundi.controller.pojo.ErrorWrraper;
 import edu.unicundi.exception.NoValidoException;
+import javax.ejb.EJB;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -18,6 +21,7 @@ import javax.ws.rs.ext.Provider;
  * @author Luz
  */
 @Provider
+
 public class NoValidoExceptionFilter implements ExceptionMapper<NoValidoException>{
     
     @ApiResponses(value = {

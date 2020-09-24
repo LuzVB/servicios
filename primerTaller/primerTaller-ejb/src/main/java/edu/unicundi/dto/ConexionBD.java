@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unicundi.controller.pojo;
+package edu.unicundi.dto;
 
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,9 +15,8 @@ import java.util.logging.Logger;
  *
  * @author Valentina
  */
-
 public class ConexionBD {
-    
+     
     Connection conexion;
 
     public ConexionBD() {

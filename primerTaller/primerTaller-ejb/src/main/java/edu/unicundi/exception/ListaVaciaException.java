@@ -9,11 +9,9 @@ package edu.unicundi.exception;
  *
  * @author Valentina
  */
+public class ListaVaciaException extends RuntimeException {
 
-public class IdVacionException extends RuntimeException {
-
-    public IdVacionException(String message) {
+    public ListaVaciaException(String message) {
         super(message);
     }
-    
 }

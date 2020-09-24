@@ -7,12 +7,13 @@ package edu.unicundi.exception;
 
 /**
  *
- * @author Luz
+ * @author Valentina
  */
-public class NoValidoException extends RuntimeException {
+public class IdVacioException extends RuntimeException {
 
-    public NoValidoException(String message) {
+    public IdVacioException(String message) {
         super(message);
     }
     
 }
+

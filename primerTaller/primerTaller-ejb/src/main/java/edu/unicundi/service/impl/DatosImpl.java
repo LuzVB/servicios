@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unicundi.logica;
-import edu.unicundi.controller.pojo.ConexionBD;
+package edu.unicundi.service.impl;
+
+import edu.unicundi.dto.ConexionBD;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,16 +20,16 @@ import javax.faces.context.FacesContext;
  *
  * @author Valentina
  */
-public class Datos implements Serializable{
-      Connection conexion;
+public class DatosImpl implements Serializable{
+     Connection conexion;
 
-    public Datos() {
+    public DatosImpl() {
         try {
             ConexionBD conectar = new ConexionBD();
             conectar.conectarBaseDatos();
             this.conexion = conectar.getConexion();
         } catch (SQLException ex) {
-            Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatosImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -61,6 +62,5 @@ public class Datos implements Serializable{
 
         }
     }
-
 
 }
