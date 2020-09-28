@@ -11,13 +11,24 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import edu.unicundi.controller.pojo.ErrorWrraper;
 import edu.unicundi.dto.Profesor;
+import edu.unicundi.dto.ProfesorA;
 import edu.unicundi.service.IProfesorService;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
+import javax.ejb.ObjectNotFoundException;
 import javax.ejb.Stateless;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -26,6 +37,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  *
@@ -38,7 +50,7 @@ public class ProfesorController {
 
     @EJB
     public IProfesorService service;
-   
+
     @Path("/retornarProfesor")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,6 +65,19 @@ public class ProfesorController {
         return Response.status(Response.Status.OK).entity(service.getListaProfesores()).build();
     }
 
+    @Path("/retornar")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(produces = "application/json", value = "Lista Profesores", httpMethod = "GET")
+    @ApiResponses(value = {
+        @ApiResponse(code = 405, message = "Method Not Allowed"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
+    public Response listaProfesor() throws EJBException, ObjectNotFoundException {
+        List<ProfesorA> dataProfesor = service.retornarProfesores();
+        return Response.status(Response.Status.OK).entity(dataProfesor).build();
+    }
+
     @Path("/retornarProfesorCedula/{cedula}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -62,7 +87,7 @@ public class ProfesorController {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
-    public Response retornarEstudiantePorCedula(@PathParam("cedula") int cedula) {
+    public Response retornarEstudiantePorCedula(@Min(999999) @Max(99999999) @PathParam("cedula") int cedula) {
         service.listarProfesorCedula(cedula);
         return Response.status(Response.Status.OK).entity(service.getListaProfesores()).build();
     }
@@ -76,7 +101,7 @@ public class ProfesorController {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
-    public Response retornarEstudiantePorMateria(@PathParam("materia") String materia) {
+    public Response retornarEstudiantePorMateria(@Size(min = 4, max = 21, message = "La materia debe tener minimo 4 y maximo 12 caracteres") @PathParam("materia") String materia) {
         service.listarProfesorMateria(materia);
         return Response.status(Response.Status.OK).entity(service.getListaProfesores()).build();
     }
@@ -94,9 +119,26 @@ public class ProfesorController {
         @ApiResponse(code = 404, message = "Not Found"),
         @ApiResponse(code = 405, message = "Method Not Allowed"),
         @ApiResponse(code = 500, message = "Internal Server Error")})
-    public Response editar(Profesor profesor) throws SQLException {
+    public Response editar(@Valid Profesor profesor) throws SQLException {
         service.editarProfesor(profesor);
         return Response.status(Response.Status.OK).build();
+    }
+
+    @Path("/insertar")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(produces = "application/json", value = "Insertar un profesor", consumes = "aplication/json",
+            httpMethod = "POST")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 422, message = "Invalid data"),
+        @ApiResponse(code = 405, message = "Method Not Allowed"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
+    public Response insertarProfesor(@Valid ProfesorA profesor) throws IOException, FileNotFoundException, ClassNotFoundException {
+        service.registroProfesor(profesor);
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @Path("/insertarProfesor")

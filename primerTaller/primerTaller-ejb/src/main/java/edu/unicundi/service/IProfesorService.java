@@ -6,17 +6,18 @@
 package edu.unicundi.service;
 
 import edu.unicundi.dto.Profesor;
+import edu.unicundi.dto.ProfesorA;
 import java.sql.SQLException;
 import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.LocalBean;
+import javax.ejb.ObjectNotFoundException;
 
 /**
  *
  * @author Valentina
  */
 @Local
-//@LocalBean
 public interface IProfesorService {
     public void listarProfesor();
 
@@ -39,4 +40,8 @@ public interface IProfesorService {
     public void eliminarProfesor(int idProfesor);
 
     public List<Profesor> getListaProfesores();
+    
+    public void registroProfesor(ProfesorA profesor);
+    
+    public List<ProfesorA> retornarProfesores() throws ObjectNotFoundException;
 }

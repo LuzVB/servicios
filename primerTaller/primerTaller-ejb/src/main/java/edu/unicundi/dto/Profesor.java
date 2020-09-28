@@ -10,6 +10,8 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Id;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,27 +25,30 @@ public class Profesor implements Serializable{
     @ApiModelProperty(value = "id del profesro", required = true)
     private Integer id;
     
-    @NotNull
+    @NotNull(message="La edad no puede ser null")
+    @Min(18)
+    @Max(65) 
     @ApiModelProperty(value = "edad del profesor", required = true)
     private Integer edad;
     
-    @NotNull
+    @Min(999999) 
+    @NotNull(message="La cedula no puede ser null")
     @ApiModelProperty(value = "cedula del profesor", required = true)
     private Integer cedula;
     
-    @NotNull
+    @NotNull(message="El nombre no puede ser null")
     @ApiModelProperty(value = "nombre del profesor", required = true)
     private String nombre;
     
-    @NotNull
+    @NotNull(message="El apellido no puede ser null")
     @ApiModelProperty(value = "apellido del profesor", required = true)
     private String apellido;
     
-    @NotNull
+    @NotNull(message="El correo no puede ser null")
     @ApiModelProperty(value = "correo del profesor", required = true)
     private String correo;
     
-    @NotNull
+    
     @ApiModelProperty(value = "lista de materias del profesor", required = true)
     private List<Materia> listaMateria;
 

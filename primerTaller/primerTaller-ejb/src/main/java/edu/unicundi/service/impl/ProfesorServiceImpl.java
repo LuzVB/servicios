@@ -7,14 +7,21 @@ package edu.unicundi.service.impl;
 
 import edu.unicundi.dto.Materia;
 import edu.unicundi.dto.Profesor;
+import edu.unicundi.dto.ProfesorA;
 import edu.unicundi.exception.IdVacioException;
 import edu.unicundi.exception.ListaVaciaException;
 import edu.unicundi.exception.NoValidoException;
 import edu.unicundi.service.IProfesorService;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.ObjectNotFoundException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -29,6 +36,8 @@ public class ProfesorServiceImpl extends DatosImpl implements IProfesorService {
     /**
      * Lista de profesores
      */
+    List<ProfesorA> ListaProfesores = new ArrayList();
+     
     private List<Profesor> listaProfesores;
     /**
      * Lista de materias
@@ -43,6 +52,50 @@ public class ProfesorServiceImpl extends DatosImpl implements IProfesorService {
      */
     private boolean estado = true;
 
+    @Override
+    public void registroProfesor(ProfesorA profesor) {
+        if (this.leer() != null) {
+            this.ListaProfesores = this.leer();
+        }
+        this.ListaProfesores.add(profesor);
+        this.llenarProfesor();
+    }
+    
+    public void llenarProfesor() {
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream("C:\\Users\\Valentina\\OneDrive - Universidad de Cundinamarca\\OctavoSemestre\\archivo.txt");
+            ObjectOutputStream db = new ObjectOutputStream(fos);
+            db.writeObject(this.ListaProfesores);
+            db.flush();
+            db.close();
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }
+     public List<ProfesorA> leer() {
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream("C:\\Users\\Valentina\\OneDrive - Universidad de Cundinamarca\\OctavoSemestre\\archivo.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            return (List<ProfesorA>) ois.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            return null;
+        }
+    }
+    @Override
+     public List<ProfesorA> retornarProfesores() throws ObjectNotFoundException {
+        if (this.leer() != null) {
+            this.ListaProfesores = this.leer();
+            if (this.ListaProfesores.isEmpty()) {
+                throw new ObjectNotFoundException("No hay registros");
+            } else {
+                return this.ListaProfesores;
+            }
+        } else {
+            throw new ObjectNotFoundException("No hay registros");
+        }
+    }
     /**
      * Metodo que retorna la lista de todos los profesores registrados
      */
@@ -187,18 +240,18 @@ public class ProfesorServiceImpl extends DatosImpl implements IProfesorService {
     @Override
     public void editarProfesor(Profesor profesor) {
 
-        if (profesor.getNombre() == null || profesor.getId() == null
-                || profesor.getEdad() == null || profesor.getCorreo() == null
-                || profesor.getApellido() == null || profesor.getCedula() == null) {
-            throw new IdVacioException("Uno de los atributos del JSON esta vacio");
-        } else {
+//        if (profesor.getNombre() == null || profesor.getId() == null
+//                || profesor.getEdad() == null || profesor.getCorreo() == null
+//                || profesor.getApellido() == null || profesor.getCedula() == null) {
+//            throw new IdVacioException("Uno de los atributos del JSON esta vacio");
+//        } else {
             this.idProfesor = Integer.parseInt(profesor.getId().toString());
             int edad = Integer.parseInt(profesor.getEdad().toString());
             int cedula = Integer.parseInt(profesor.getCedula().toString());
             System.out.println(profesor.getNombre() + " " + profesor.getApellido() + " " + profesor.getEdad());
             String cadenaSql = "UPDATE public.profesor SET  id_profesor='" + this.idProfesor + "',cedula_profesor='" + cedula + "',nombre_profesor='" + profesor.getNombre() + "',apellido_profesor='" + profesor.getApellido() + "',correo_profesor='" + profesor.getCorreo() + "',edad_correo='" + edad + "' WHERE id_profesor=" + this.idProfesor + ";";
             modifacionBaseDatos(cadenaSql);
-        }
+//        }
     }
 
     /**
@@ -210,10 +263,10 @@ public class ProfesorServiceImpl extends DatosImpl implements IProfesorService {
     @Override
     public void insertarProfesor(Profesor profesorInsertar) throws Exception {
 
-        if (profesorInsertar.getNombre() == null || profesorInsertar.getEdad() == null || profesorInsertar.getCorreo() == null
-                || profesorInsertar.getApellido() == null || profesorInsertar.getCedula() == null) {
-            throw new IdVacioException("Uno de los atributos del JSON esta vacio");
-        } else {
+//        if (profesorInsertar.getNombre() == null || profesorInsertar.getEdad() == null || profesorInsertar.getCorreo() == null
+//                || profesorInsertar.getApellido() == null || profesorInsertar.getCedula() == null) {
+//            throw new IdVacioException("Uno de los atributos del JSON esta vacio");
+//        } else {
             traerCedula(Integer.parseInt(profesorInsertar.getCedula().toString()));
             if (estado == false) {
                 String cadenaSql = " INSERT INTO public.profesor(cedula_profesor, nombre_profesor, apellido_profesor, correo_profesor, edad_correo)"
@@ -222,10 +275,10 @@ public class ProfesorServiceImpl extends DatosImpl implements IProfesorService {
                 modifacionBaseDatos(cadenaSql);
                 traerUltimoID();
                 insertarTablaAsociativa(profesorInsertar.getListaMateria(), this.idProfesor);
-            } else {
+            }else {
                 throw new NoValidoException("La cedula ya se encuentra registrada");
             }
-        }
+//        }
 
     }
 
