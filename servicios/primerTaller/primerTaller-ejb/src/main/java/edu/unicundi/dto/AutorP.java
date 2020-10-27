@@ -22,6 +22,8 @@ public class AutorP {
     
     private Date fecha;
 
+    private Boolean estado;
+    
     private List<Libro> libro;
 
     public AutorP() {
@@ -69,6 +71,14 @@ public class AutorP {
 
     public void getId(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 
 

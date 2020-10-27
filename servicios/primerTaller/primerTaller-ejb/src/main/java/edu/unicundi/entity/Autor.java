@@ -15,13 +15,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.codehaus.jackson.annotate.JsonIgnore;
+
 
 /**
  *
@@ -32,7 +34,13 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @NamedQueries({
     @NamedQuery(name = "Autor.listarTodo", query = "SELECT a FROM Autor a"),
     @NamedQuery(name = "Autor.validarAutor", query = "SELECT COUNT(a.id) FROM Autor a WHERE a.id = :id"),
-//    @NamedQuery(name = "Autor.listarLibros", query = "")
+    @NamedQuery(name = "Autor.listarSoloAutor", query = "SELECT a.id, a.nombre, a.apellido, a.fecha FROM Autor a"),
+    @NamedQuery(name = "Autor.estado", query = "Update Autor u set u.estado = :estado WHERE u.id = :id")
+//    @NamedQuery(name = "Autor.listarLibros", query = "@PUT")
+})
+
+@NamedNativeQueries({
+    @NamedNativeQuery(name = "Autor.listarTodoConsultaNativo", query = "select a.id, a.nombre, a.apellido, a.fecha from public.autor a", resultClass = Autor.class),
 })
 public class Autor implements Serializable {
     
@@ -46,6 +54,9 @@ public class Autor implements Serializable {
     @Column(name = "apellido", nullable = false, length = 25)
     private String apellido;
     
+    @Column(name = "estado", nullable = false)
+    private Boolean estado;
+    
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
     
@@ -55,14 +66,16 @@ public class Autor implements Serializable {
     public Autor() {
     
     }
-    
-    public Autor(Integer id, String nombre, String apellido, Date fecha, List<Libro> libro) {
+   
+    public Autor(Integer id, String nombre, String apellido, Boolean estado, Date fecha, List<Libro> libro) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.estado = estado;
         this.fecha = fecha;
         this.libro = libro;
     }
+    
 
     public Integer getId() {
         return id;
@@ -103,5 +116,15 @@ public class Autor implements Serializable {
 
     public void setLibro(List<Libro> libro) {
         this.libro = libro;
-    }            
+    }  
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+    
+    
 }

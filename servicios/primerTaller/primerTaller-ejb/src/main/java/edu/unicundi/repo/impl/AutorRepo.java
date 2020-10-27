@@ -36,6 +36,28 @@ public class AutorRepo implements IAutorRepo {
         
         return listaAutor.getResultList();        
     }
+    
+    @Override
+    public List<Autor> listarOpcion1() {
+        this.entity.getEntityManagerFactory().getCache().evictAll();
+        TypedQuery<Autor> listaAutor = this.entity.createNamedQuery("Autor.listarTodo", Autor.class);                
+        return listaAutor.getResultList();        
+    }
+    
+    @Override
+    public List<Autor> listarOpcion2() {
+        this.entity.getEntityManagerFactory().getCache().evictAll();
+        TypedQuery<Autor> listaAutor = this.entity.createNamedQuery("Autor.listarSoloAutor", Autor.class);                
+        return listaAutor.getResultList();        
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    @Override
+    public List<Autor> listarOpcion3() {
+        TypedQuery<Autor> listaAutor = this.entity.createNamedQuery("Autor.listarTodo", Autor.class);                
+        return listaAutor.getResultList();                
+    }
+    
 
     @Override
     public Autor listarPorId(Integer id) {
@@ -61,6 +83,33 @@ public class AutorRepo implements IAutorRepo {
     @Override
     public void eliminar(Autor autor) {
         this.entity.remove(autor);
+    }
+    
+    @Override
+    public Integer validaId(Integer id) {
+        Query query = this.entity.createNamedQuery("Autor.validarAutor");
+        query.setParameter("id", id);
+        String consulta = query.getSingleResult().toString();
+        Integer resultado = Integer.parseInt(consulta); 
+        return resultado  ;
+    }
+    
+    @Override
+    public void bloquear(Integer id) {
+        Boolean estado = false;
+        Query q = entity.createNamedQuery("Autor.estado");
+        q.setParameter("estado", estado);
+        q.setParameter("id", id);
+        q.executeUpdate();
+    }
+
+    @Override
+    public void habilitar(Integer id) {
+        Boolean estado = true;
+        Query q = entity.createNamedQuery("Autor.estado");
+        q.setParameter("estado", estado);
+        q.setParameter("id", id);
+        q.executeUpdate();
     }
 
 }
