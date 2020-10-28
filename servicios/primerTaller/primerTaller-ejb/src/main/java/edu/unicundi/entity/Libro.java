@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -29,6 +31,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Table(name = "libro")
 @XmlRootElement
 @XmlAccessorType(value = XmlAccessType.FIELD)
+@NamedQueries({
+    @NamedQuery(name = "Libro.listarTodo", query = "SELECT a FROM Libro a"),           
+})
 public class Libro implements Serializable {
    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

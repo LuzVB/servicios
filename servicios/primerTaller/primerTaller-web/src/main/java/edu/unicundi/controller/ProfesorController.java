@@ -153,7 +153,8 @@ public class ProfesorController {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response eliminar(@PathParam("idProfesor") int id) throws NoValidoException {
-        service.eliminarProfesor(id);
+//        service.eliminarProfesor(id);
+//        return Response.status(Response.Status.NO_CONTENT).build();
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 }
